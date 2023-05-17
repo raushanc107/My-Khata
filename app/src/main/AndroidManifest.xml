@@ -12,6 +12,9 @@
         android:theme="@style/Theme.MyKhata"
         tools:targetApi="31">
         <activity
+            android:name=".PersonalExpense"
+            android:exported="false" />
+        <activity
             android:name=".userdataActivity"
             android:exported="false" />
         <activity
