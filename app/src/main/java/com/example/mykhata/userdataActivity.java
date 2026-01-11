@@ -27,6 +27,7 @@ import java.util.Calendar;
 import Adapters.RecyclerViewMainActivityAdapter;
 import Adapters.RecycleruserdataactivityAdapter;
 import DBHandler.DBHandler;
+import Models.common;
 import Models.user;
 import Models.userData;
 import swipehandler.SwipeController;
@@ -75,8 +76,7 @@ public class userdataActivity extends AppCompatActivity {
     public void load(){
         User=DB.getUserData(Userid);
         double totalvalue=User.balance;
-        finalvalue.setText("\u20B9 "+Integer.toString(Math.round((float)Math.abs(totalvalue))));
-        if(totalvalue>0){
+        finalvalue.setText(common.formatCurrency(totalvalue));        if(totalvalue>0){
             finaltext.setText("You will get");
             finalvalue.setTextColor(getResources().getColor(R.color.greenText));
         }

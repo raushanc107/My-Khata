@@ -6,8 +6,8 @@
     android:id="@+id/usermainlayoutperuser"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="1dp"
-    android:background="@color/white"
+    android:layout_marginTop="0dp"
+    android:background="@color/card_background"
     android:clickable="true"
     android:orientation="vertical">
 
@@ -38,7 +38,7 @@
                     android:minHeight="20dp"
                     android:text="RV"
                     android:textAlignment="gravity"
-                    android:textColor="@color/purple_200"
+                    android:textColor="@color/date_text_color"
                     android:textSize="15dp" />
 
             </LinearLayout>
@@ -97,7 +97,7 @@
                 android:id="@+id/frameedit"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="#FFAB00"
+                android:background="@color/edit_background"
                 android:orientation="vertical"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
@@ -151,5 +151,8 @@
         </LinearLayout>
     </FrameLayout>
 
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
 </LinearLayout>

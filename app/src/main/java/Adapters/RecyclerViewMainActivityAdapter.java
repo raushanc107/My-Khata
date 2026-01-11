@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import DBHandler.DBHandler;
+import Models.common;
 import Models.user;
 
 public class RecyclerViewMainActivityAdapter extends RecyclerView.Adapter<RecyclerViewMainActivityAdapter.ViewHolder> {
@@ -58,20 +59,19 @@ public class RecyclerViewMainActivityAdapter extends RecyclerView.Adapter<Recycl
             String[] names=users.get(position).name.toUpperCase().split(" ");
             holder.icon.setText(names[0].charAt(0)+""+names[names.length-1].charAt(0));
             double totalvalue=users.get(position).balance;
-        holder.amount.setText("\u20B9 "+Integer.toString(Math.round((float)Math.abs(totalvalue))));
-            if(totalvalue>0){
+        holder.amount.setText(common.formatCurrency(totalvalue));            if(totalvalue>0){
 
                 holder.amount.setTextColor(context.getResources().getColor(R.color.greenText));
-                holder.amount.setBackgroundResource(R.color.greenback);
+//                holder.amount.setBackgroundResource(R.color.greenback);
             }
             if(totalvalue<0){
 
                 holder.amount.setTextColor(context.getResources().getColor(R.color.redtext));
-                holder.amount.setBackgroundResource(R.color.redback);
+//                holder.amount.setBackgroundResource(R.color.redback);
             }
             if(totalvalue==0){
 
-                holder.amount.setBackgroundResource(R.color.lightoutline);
+//                holder.amount.setBackgroundResource(R.color.lightoutline);
 
             }
 
@@ -135,20 +135,15 @@ public class RecyclerViewMainActivityAdapter extends RecyclerView.Adapter<Recycl
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()){
-                case R.id.editoption: {
-                    EditItem();
-                    return true;
-
-                }
-                case R.id.deleteoption:{
-                    DeleteItem();
-                    return true;
-                }
-                default:{
-                    return false;
-                }
-
+            int itemId = item.getItemId();
+            if (itemId == R.id.editoption) {
+                EditItem();
+                return true;
+            } else if (itemId == R.id.deleteoption) {
+                DeleteItem();
+                return true;
+            } else {
+                return false;
             }
         }
 

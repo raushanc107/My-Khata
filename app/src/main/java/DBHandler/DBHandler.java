@@ -18,10 +18,10 @@ import Models.user;
 
 public class DBHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME="mykhatabookdb";
-    private static final int DATAVASE_VERSION=2;
+    private static final int DATABASE_VERSION=2;
 
     public DBHandler(Context context) {
-        super(context, DATABASE_NAME, null, DATAVASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -35,11 +35,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-        db.execSQL("DROP TABLE IF EXISTS users");
-        db.execSQL("DROP TABLE IF EXISTS userdata");
-        onCreate(db);
-
+        // To preserve user data on upgrade, you should not drop the tables.
+        // Instead, you should alter the table to add new columns or make other changes.
+        // Here, I'm assuming that the 'descr' column was added in version 2.
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE userdata ADD COLUMN descr TEXT");
+        }
     }
 
     public mainModel getDataFromDB(){
@@ -66,7 +67,8 @@ public class DBHandler extends SQLiteOpenHelper {
         catch (Exception e)
         {
             Log.e("exec",e.getMessage());
-        }finally {
+        }
+        finally {
             db.close();
         }
         return model;

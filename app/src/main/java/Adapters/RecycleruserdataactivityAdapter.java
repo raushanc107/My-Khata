@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import DBHandler.DBHandler;
+import Models.common;
 import Models.userData;
 
 public class RecycleruserdataactivityAdapter extends RecyclerView.Adapter<RecycleruserdataactivityAdapter.ViewHolder> {
@@ -73,14 +74,14 @@ public class RecycleruserdataactivityAdapter extends RecyclerView.Adapter<Recycl
 
         holder.desc.setText(Data.get(position).desc);
         if(Data.get(position).got==0){
-            holder.amount.setText("\u20B9 "+String.valueOf(Math.round(Data.get(position).give)));
+            holder.amount.setText(common.formatCurrency(Data.get(position).give));
             holder.amount.setTextColor(context.getResources().getColor(R.color.redtext));
-            holder.amount.setBackgroundResource(R.color.redback);
+//            holder.amount.setBackgroundResource(R.color.redback);
         }
         if(Data.get(position).give==0){
-            holder.amount.setText("\u20B9 "+String.valueOf(Math.round(Data.get(position).got)));
+            holder.amount.setText(common.formatCurrency(Data.get(position).got));
             holder.amount.setTextColor(context.getResources().getColor(R.color.greenText));
-            holder.amount.setBackgroundResource(R.color.greenback);
+//            holder.amount.setBackgroundResource(R.color.greenback);
         }
     }
 
@@ -114,125 +115,121 @@ public class RecycleruserdataactivityAdapter extends RecyclerView.Adapter<Recycl
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-
-            switch (item.getItemId()){
-                case R.id.editoption:{
-                    Dialog dialog=new Dialog(context);
-                    dialog.setContentView(R.layout.giveandgotdialoglayout);
-                    TextView t=dialog.findViewById(R.id.giveandgottext);
-                    EditText amount=dialog.findViewById(R.id.giveorgotamount);
-                    EditText desc=dialog.findViewById(R.id.giveorgotdesc);
-                    Button d=dialog.findViewById(R.id.giveorgotdate);
-                    Button btn=dialog.findViewById(R.id.giveorgotbtn);
-                    ((userdataActivity)context).myday=Integer.parseInt(new SimpleDateFormat("dd").format(Data.get(getAdapterPosition()).date));
-                    ((userdataActivity)context).mymonth=Integer.parseInt(new SimpleDateFormat("MM").format(Data.get(getAdapterPosition()).date));
-                    ((userdataActivity)context).myyear=Integer.parseInt(new SimpleDateFormat("yyyy").format(Data.get(getAdapterPosition()).date));
-                    d.setText(((userdataActivity)context).myday+"-"+((userdataActivity)context).mymonth+"-"+((userdataActivity)context).myyear);
-                    btn.setText("Update");
-                    desc.setText(Data.get(getAdapterPosition()).desc);
-                    if(Data.get(getAdapterPosition()).give==0){
-                        t.setText("YOU GOT");
-                        amount.setText(String.valueOf(Math.round(Data.get(getAdapterPosition()).got)));
-                        d.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                DatePickerDialog datePickerDialog=new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-                                    @Override
-                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                        ((userdataActivity)context).myday=dayOfMonth;
-                                        ((userdataActivity)context).mymonth=month+1;
-                                        ((userdataActivity)context).myyear=year;
-                                        d.setText(((userdataActivity)context).myday+"-"+(((userdataActivity)context).mymonth)+"-"+((userdataActivity)context).myyear);
-                                    }
-                                },((userdataActivity)context).myyear,(((userdataActivity)context).mymonth-1),((userdataActivity)context).myday);
-
-                                datePickerDialog.show();
-
-                            }
-                        });
-                        btn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if(!amount.getText().toString().equals("")&&!desc.getText().toString().equals("")) {
-                                    DB.UpdateUserData(Data.get(getAdapterPosition()).id,((userdataActivity)context).User.id,amount.getText().toString(),"",((userdataActivity)context).myday+"-"+((userdataActivity)context).mymonth+"-"+((userdataActivity)context).myyear,desc.getText().toString());
-                                    ((userdataActivity)context).load();
-                                    dialog.dismiss();
-                                }
-                            }
-                        });
-                        dialog.show();
-                    }
-                    if(Data.get(getAdapterPosition()).got==0){
-                        t.setText("YOU GAVE");
-                        amount.setText(String.valueOf(Math.round(Data.get(getAdapterPosition()).give)));
-                        d.setText(((userdataActivity)context).myday+"-"+((userdataActivity)context).mymonth+"-"+((userdataActivity)context).myyear);
-                        d.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                DatePickerDialog datePickerDialog=new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-                                    @Override
-                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                        ((userdataActivity)context).myday=dayOfMonth;
-                                        ((userdataActivity)context).mymonth=month+1;
-                                        ((userdataActivity)context).myyear=year;
-                                        d.setText(((userdataActivity)context).myday+"-"+(((userdataActivity)context).mymonth)+"-"+((userdataActivity)context).myyear);
-                                    }
-                                },((userdataActivity)context).myyear,(((userdataActivity)context).mymonth-1),((userdataActivity)context).myday);
-
-                                datePickerDialog.show();
-
-                            }
-                        });
-                        btn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if(!amount.getText().toString().equals("")&&!desc.getText().toString().equals("")) {
-                                    DB.UpdateUserData(Data.get(getAdapterPosition()).id,((userdataActivity)context).User.id,"",amount.getText().toString(),((userdataActivity)context).myday+"-"+((userdataActivity)context).mymonth+"-"+((userdataActivity)context).myyear,desc.getText().toString());
-                                    ((userdataActivity)context).load();
-                                    dialog.dismiss();
-                                }
-                            }
-                        });
-                        dialog.show();
-                    }
-
-                    return true;
-                }
-                case R.id.deleteoption:{
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-                    builder.setTitle("Confirm Delete");
-                    builder.setMessage("Are you sure you want to Delete This Entry?");
-
-                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Do nothing but close the dialog
-                            DB.DeleteUserData(Data.get(getAdapterPosition()).id);
-                            ((userdataActivity)context).load();
-                            dialog.dismiss();
-                        }
-                    });
-
-                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
+            int itemId = item.getItemId();
+            if (itemId == R.id.editoption) {
+                Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.giveandgotdialoglayout);
+                TextView t = dialog.findViewById(R.id.giveandgottext);
+                EditText amount = dialog.findViewById(R.id.giveorgotamount);
+                EditText desc = dialog.findViewById(R.id.giveorgotdesc);
+                Button d = dialog.findViewById(R.id.giveorgotdate);
+                Button btn = dialog.findViewById(R.id.giveorgotbtn);
+                ((userdataActivity) context).myday = Integer.parseInt(new SimpleDateFormat("dd").format(Data.get(getAdapterPosition()).date));
+                ((userdataActivity) context).mymonth = Integer.parseInt(new SimpleDateFormat("MM").format(Data.get(getAdapterPosition()).date));
+                ((userdataActivity) context).myyear = Integer.parseInt(new SimpleDateFormat("yyyy").format(Data.get(getAdapterPosition()).date));
+                d.setText(((userdataActivity) context).myday + "-" + ((userdataActivity) context).mymonth + "-" + ((userdataActivity) context).myyear);
+                btn.setText("Update");
+                desc.setText(Data.get(getAdapterPosition()).desc);
+                if (Data.get(getAdapterPosition()).give == 0) {
+                    t.setText("YOU GOT");
+                    amount.setText(String.valueOf(Math.round(Data.get(getAdapterPosition()).got)));
+                    d.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(View v) {
 
-                            // Do nothing
-                            dialog.dismiss();
+                            DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                    ((userdataActivity) context).myday = dayOfMonth;
+                                    ((userdataActivity) context).mymonth = month + 1;
+                                    ((userdataActivity) context).myyear = year;
+                                    d.setText(((userdataActivity) context).myday + "-" + (((userdataActivity) context).mymonth) + "-" + ((userdataActivity) context).myyear);
+                                }
+                            }, ((userdataActivity) context).myyear, (((userdataActivity) context).mymonth - 1), ((userdataActivity) context).myday);
+
+                            datePickerDialog.show();
+
                         }
                     });
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!amount.getText().toString().equals("") && !desc.getText().toString().equals("")) {
+                                DB.UpdateUserData(Data.get(getAdapterPosition()).id, ((userdataActivity) context).User.id, amount.getText().toString(), "", ((userdataActivity) context).myday + "-" + ((userdataActivity) context).mymonth + "-" + ((userdataActivity) context).myyear, desc.getText().toString());
+                                ((userdataActivity) context).load();
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+                    dialog.show();
+                }
+                if (Data.get(getAdapterPosition()).got == 0) {
+                    t.setText("YOU GAVE");
+                    amount.setText(String.valueOf(Math.round(Data.get(getAdapterPosition()).give)));
+                    d.setText(((userdataActivity) context).myday + "-" + ((userdataActivity) context).mymonth + "-" + ((userdataActivity) context).myyear);
+                    d.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    return true;
+                            DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                    ((userdataActivity) context).myday = dayOfMonth;
+                                    ((userdataActivity) context).mymonth = month + 1;
+                                    ((userdataActivity) context).myyear = year;
+                                    d.setText(((userdataActivity) context).myday + "-" + (((userdataActivity) context).mymonth) + "-" + ((userdataActivity) context).myyear);
+                                }
+                            }, ((userdataActivity) context).myyear, (((userdataActivity) context).mymonth - 1), ((userdataActivity) context).myday);
+
+                            datePickerDialog.show();
+
+                        }
+                    });
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!amount.getText().toString().equals("") && !desc.getText().toString().equals("")) {
+                                DB.UpdateUserData(Data.get(getAdapterPosition()).id, ((userdataActivity) context).User.id, "", amount.getText().toString(), ((userdataActivity) context).myday + "-" + ((userdataActivity) context).mymonth + "-" + ((userdataActivity) context).myyear, desc.getText().toString());
+                                ((userdataActivity) context).load();
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+                    dialog.show();
                 }
-                default:{
-                    return false;
-                }
+
+                return true;
+            } else if (itemId == R.id.deleteoption) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                builder.setTitle("Confirm Delete");
+                builder.setMessage("Are you sure you want to Delete This Entry?");
+
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing but close the dialog
+                        DB.DeleteUserData(Data.get(getAdapterPosition()).id);
+                        ((userdataActivity) context).load();
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // Do nothing
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+                return true;
+            } else {
+                return false;
             }
         }
     }
